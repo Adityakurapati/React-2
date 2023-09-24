@@ -4,7 +4,7 @@ const Home=( { posts } ) =>
 {
           return (
                     <main className="home">
-                              { posts.length? <Feed posts={ posts } />:<p> NO Posts Yet </p> }
+                        {posts.length?<Feed posts={posts} />:<p>No Posts Found </p>}
                     </main>
           )
 }
