@@ -1,6 +1,6 @@
 import React from 'react'
 
-const NewPost=( { handleSubmit, postTitle, postBody, stePostTitle, setPostBody } ) =>
+const NewPost=( { handleSubmit, postTitle, postBody, setPostTitle, setPostBody } ) =>
 {
           return (
                     <main className='newPost'>
