@@ -1,0 +1,31 @@
+// 18
+
+useEffect( async () =>
+{
+        // axios = auto into JsonObject + Catch The Error When Its Not In The 200 Http response 🚫 if(!res.ok)
+        const fetchPosts=async () =>
+        {
+                try
+                {
+                        const response=api.get( '/posts' ); // Specify EndPoint
+                        setPosts( response.data );  // Error Not Occured  
+                        // if ( responce&&response.data ) 
+                } catch ( err )
+                {
+                        //  Not In The Range Of 200 Response Range 
+                        if ( err.message )
+                        {
+                                console.log( err.responce.data );
+                                console.log( err.responce.headers );
+                                console.log( err.responce.status );
+                        } else
+                        {
+                                // No Response (404)
+                                console.log( err.message );
+                        }
+                }
+        }
+
+        await fetchPosts();
+}, [] )
+

@@ -1,0 +1,22 @@
+{
+        "posts":[
+                {
+                        "id": 1,
+                        "title": "Aditys's Blog ",
+                        "date": "2023-09-18T12:00:00",
+                        "body": "The Date object is a powerful tool for handling dates and times in JavaScript. However, it's worth noting that it lacks some advanced features found in libraries like moment.js, so for more complex date and time manipulation, you might consider using such libraries or built-in JavaScript functions"
+                },
+                {
+                        "id": 2,
+                        "title": "Pawan's Blog ",
+                        "date": "2023-09-18T12:00:00",
+                        "body": "The Date object is a powerful tool for handling dates and times in JavaScript. However, it's worth noting that it lacks some advanced features found in libraries like moment.js, so for more complex date and time manipulation, you might consider using such libraries or built-in JavaScript functions"
+                },
+                {
+                        "id": 3,
+                        "title": "Blog 1",
+                        "date": "2023-09-18T12:00:00",
+                        "body": "The Date object is a powerful tool for handling dates and times in JavaScript. However, it's worth noting that it lacks some advanced features found in libraries like moment.js, so for more complex date and time manipulation, you might consider using such libraries or built-in JavaScript functions"
+                }
+        ]
+}

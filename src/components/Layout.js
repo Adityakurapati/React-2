@@ -6,14 +6,15 @@ import Footer from './Footer';
 import { Outlet } from 'react-router-dom'
 const Layout=( { search, setSearch } ) =>
 {
-          return (
-                    <>
-                              <Header title={ "Samaurai Blogs" } />
-                              <Nav search={ search } setSearch={ setSearch } />
-                              <Outlet />
-                              <Footer />
-                    </>
-          )
+        return (
+                <>
+                        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.8/css/line.css"></link>
+                        <Header title={ "Samaurai Blogs" } width={ width } />
+                        <Nav search={ search } setSearch={ setSearch } />
+                        <Outlet />
+                        <Footer />
+                </>
+        )
 }
 
 export default Layout

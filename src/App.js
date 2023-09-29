@@ -16,6 +16,15 @@ import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-route
 // import { Route, BrowserRouter as Router, Switch, useHistory } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import api from './api/posts';
+import EditPost from './components/EditPost';
+
+//Custom Hooks
+import useWindowSize from './hooks/useWindowSize';
+import useAxiosFetch from './hooks/useAxiosFetch';
+
+const { data, fetchError, isLoading }=useAxiosFetch();
+
 function App ()
 {
 
@@ -49,9 +58,22 @@ function App ()
         const [ postTitle, setPostTitle ]=useState( '' );
         const [ postBody, setPostBody ]=useState( '' );
 
+        // EditPost 
+        const [ editTitle, setEditTitle ]=useState( '' );
+        const [ editBody, setEditBody ]=useState( '' );
+
         // const history=useHistory();
         const navigate=useNavigate();
+        const { width }=useWindowSize();
+
+
         // useEffect
+        // #1 Runs At load
+        useEffect( async () =>
+        {
+                // axios = auto into JsonObject + Catch The Error When Its Not In The 200 Http response 🚫 if(!res.ok)
+                setPosts( data );
+        }, [] )
         useEffect( () =>
         {
                 const filteredPosts=posts.filter( post =>
@@ -64,27 +86,63 @@ function App ()
                 setSearchResults( filteredPosts.reverse() );
         }, [ posts, search ] )
         // Operations
-        const handleSubmit=( e ) =>
+        const handleSubmit=async ( e ) =>
         {
                 e.preventDefault();
                 const id=posts? posts[ posts.length-1 ].id+1:1;
                 const date=format( new Date( "MMMM dd, yyyy pp" ) );
                 const newPost={ id: id, title: postTitle, date: date, body: postBody };
-                const allPosts=[ ...posts, newPost ];
-                setPosts( allPosts );
-                setPostTitle( '' );
-                setPostBody( '' );
-                // history.push( '/' );
-                navigate( '/' );
+                try
+                {
+                        const response=api.post( '/posts', newPost );
+                        const allPosts=[ ...posts, response.data ];
+                        setPosts( allPosts );
+                        setPostTitle( '' );
+                        setPostBody( '' );
+                        // history.push( '/' );
+                        navigate( '/' );
+                }
+                catch ( err )
+                {
+                        console.log( err.message );
+                }
 
         }
-        const handleDelete=( id ) =>
+        const handleDelete=async ( id ) =>
         {
-                const listItems=posts.filter( post => post.id!==id );
-                setPosts( listItems );
-                // history.push( '/' ); // Just Route Back To The Home Page 
-                navigate( '/' ); // Just Route Back To The Home Page 
+                try
+                {
+                        // WE Didn't Get Response 
+                        await api.delete( `/posts/${ id }` );
+                        const listItems=posts.filter( post => post.id!==id );
+                        setPosts( listItems );
+                        // history.push( '/' ); // Just Route Back To The Home Page 
+                        navigate( '/' ); // Just Route Back To The Home Page 
+                } catch ( err )
+                {
+
+
+                }
         }
+
+        const handleEdit=async ( id ) =>
+        {
+                const date=format( new Date( "MMMM dd, yyyy pp" ) );
+                const updatedPost={ id: id, title: editTitle, date: date, body: editBody };
+                try
+                {
+                        const response=api.put( `/posts/${ id }`, updatedPost );
+                        setPost( posts.map( post => post.id===id? { ...response.data }:{ ...post } ) );
+                        setEditTitle( '' );
+                        setEditBody( '' );
+                        navigate( '/' );
+                } catch ( err )
+                {
+                        console.log( err.message );
+                }
+
+        }
+
         {/* Swiching Between Routes  */ }
         // Problem Is It Works Like A Water Fall As It Match / from /post also So Its Rendering / component That  Is Home(/ matches All Other Path)
 
@@ -94,9 +152,13 @@ function App ()
                 <Routes>
 
                         <Route path='/' element={
-                                <Layout search={ search } setSearch={ setSearch } /> }>
+                                <Layout search={ search } setSearch={ setSearch } width={ width } /> }>
 
-                                <Route index element={ <Home posts={ searchResults } /> } />
+                                <Route index element={ <Home
+                                        posts={ searchResults }
+                                        data={ data }
+                                        fetchError={ fetchError }
+                                        isLoading={ isLoading } /> } />
                                 <Route path='post'>
                                         <Route index element={ <NewPost
                                                 postTitle={ postTitle }
@@ -105,8 +167,16 @@ function App ()
                                                 setPostBody={ setPostBody }
                                                 handleSubmit={ handleSubmit }
                                         /> } />
-                                        <Route path=':id' element={ <PostPage post={ posts }
+                                        <Route path=':id' element={ <PostPage posts={ posts }
                                                 handleDelete={ handleDelete } /> } />
+                                        <Route path='edit/:id' element={ <EditPost
+                                                posts={ posts }
+                                                handleEdit={ handleEdit }
+                                                editTitle={ editTitle }
+                                                editBody={ editBody }
+                                                setEditTitle={ setEditTitle }
+                                                setEditBody={ setEditBody }
+                                        /> } />
                                 </Route>
                         </Route>
                         <Route path="/about" element={ <About /> } />
