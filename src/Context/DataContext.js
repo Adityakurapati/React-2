@@ -133,7 +133,7 @@ export const DataProvider=( { children } ) =>
 {
         // Pass All Values to Provider Instead of Drillling Them Down As Props 
         return <DataContext value={ {
-                search, setSearch, width,
+                width, search, setSearch,
                 searchResults, data, fetchError, isLoading,
                 postTitle, postBody, setPostTitle, setPostBody, handleSubmit,
                 posts, handleDelete,

@@ -27,27 +27,13 @@ function App ()
                         <Routes>
 
                                 <Route path='/' element={
-                                        <Layout search={ search } setSearch={ setSearch } width={ width } /> }>
+                                        <Layout /> }>
 
                                         <Route index element={ <Home /> } />
                                         <Route path='post'>
-                                                <Route index element={ <NewPost
-                                                        postTitle={ postTitle }
-                                                        postBody={ postBody }
-                                                        setPostTitle={ setPostTitle }
-                                                        setPostBody={ setPostBody }
-                                                        handleSubmit={ handleSubmit }
-                                                /> } />
-                                                <Route path=':id' element={ <PostPage posts={ posts }
-                                                        handleDelete={ handleDelete } /> } />
-                                                <Route path='edit/:id' element={ <EditPost
-                                                        posts={ posts }
-                                                        handleEdit={ handleEdit }
-                                                        editTitle={ editTitle }
-                                                        editBody={ editBody }
-                                                        setEditTitle={ setEditTitle }
-                                                        setEditBody={ setEditBody }
-                                                /> } />
+                                                <Route index element={ <NewPost /> } />
+                                                <Route path=':id' element={ <PostPage /> } />
+                                                <Route path='edit/:id' element={ <EditPost /> } />
                                         </Route>
                                 </Route>
                                 <Route path="/about" element={ <About /> } />

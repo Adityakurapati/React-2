@@ -1,10 +1,13 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { UilEdit, UilTrashAlt } from '@iconscout/react-unicons';
-const PostPage=( { posts, handleDelete } ) =>
+
+import { useContext } from 'react';
+import DataContext from '../Context/DataContext';
+const PostPage=() =>
 {
         // Extract The Id From The URL Parameters 
-
+        const { posts, handleDelete }=useContext( DataContext );
         const { id }=useParams();
 
         // toString() Because The id in Url Is String And post.id is Numeric
