@@ -1,14 +1,36 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom';
-import { UilEdit, UilTrashAlt } from '@iconscout/react-unicons';
-
+import { UilEdit, UilTrashAlt } from '@iconscout/react-unicons'
 import { useContext } from 'react';
 import DataContext from '../Context/DataContext';
+
+import { useNavigate } from "react-router-dom";
+import api from '../api/posts';
 const PostPage=() =>
 {
         // Extract The Id From The URL Parameters 
-        const { posts, handleDelete }=useContext( DataContext );
+        const { posts, setPosts }=useContext( DataContext );
         const { id }=useParams();
+
+        const navigate=useNavigate();
+
+        // Operations
+
+        const handleDelete=async ( id ) =>
+        {
+                try
+                {
+                        // WE Didn't Get Response 
+                        await api.delete( `/posts/${ id }` );
+                        const listItems=posts.filter( post => post.id!==id );
+                        setPosts( listItems );
+                        // history.push( '/' ); // Just Route Back To The Home Page 
+                        navigate( '/' ); // Just Route Back To The Home Page 
+                } catch ( err )
+                {
+                        alert( "Unable To Delete " )
+                }
+        }
 
         // toString() Because The id in Url Is String And post.id is Numeric
         const post=posts.find( post => ( post.id ).toString()===id );

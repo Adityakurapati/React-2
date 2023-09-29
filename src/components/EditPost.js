@@ -1,14 +1,38 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FiEdit2 } from 'react-icons/fa';
-
+import { format } from 'date-fns';
 import { useContext } from 'react';
 import DataContext from '../Context/DataContext';
+import { useNavigate } from "react-router-dom";
+import api from '../api/posts';
 const EditPost=async () =>
 {
-        const { posts, handleEdit, editTitle, setEditTitle, editBody, setEditBody }=useContext( DataContext );
+        const { posts, setPosts }=useContext( DataContext );
+        const navigate=useNavigate();
         const { id }=useParams();
         const post=posts.find( post => ( post.id ).toString()===id );
+
+
+        const [ editTitle, setEditTitle ]=useState( '' );
+        const [ editBody, setEditBody ]=useState( '' );
+
+        const handleEdit=async ( id ) =>
+        {
+                const date=format( new Date( "MMMM dd, yyyy pp" ) );
+                const updatedPost={ id: id, title: editTitle, date: date, body: editBody };
+                try
+                {
+                        const response=api.put( `/posts/${ id }`, updatedPost );
+                        setPosts( posts.map( post => post.id===id? { ...response.data }:{ ...post } ) );
+                        setEditTitle( '' );
+                        setEditBody( '' );
+                        navigate( '/' );
+                } catch ( err )
+                {
+                        console.log( err.message );
+                }
+
+        }
         useEffect( async () =>
         {
                 setEditBody( post.title )

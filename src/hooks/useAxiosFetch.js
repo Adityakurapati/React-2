@@ -45,3 +45,4 @@ const useAxiosFetch=( dataUrl ) =>
         }, [ dataUrl ] )
         return [ data, fetchError, isLoading ];
 }
+export default useAxiosFetch;
