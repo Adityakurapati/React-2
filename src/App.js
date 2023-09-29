@@ -7,9 +7,13 @@ import Home from './components/Home';
 import About from './components/About';
 import PostPage from './components/PostPage';
 import NewPost from './components/NewPost';
+import EditPost from './components/EditPost';
 //  404 Missing Page 
 import MissingPost from './components/MissingPost';
+import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom'
 
+// Context
+import { DataProvider } from './Context/DataContext';
 
 function App ()
 {
@@ -19,40 +23,38 @@ function App ()
         {/* RRv6 Is More Smarter It Knows That Which Path Is More Exact
        */}
         return (
-                <Routes>
+                <DataProvider>
+                        <Routes>
 
-                        <Route path='/' element={
-                                <Layout search={ search } setSearch={ setSearch } width={ width } /> }>
+                                <Route path='/' element={
+                                        <Layout search={ search } setSearch={ setSearch } width={ width } /> }>
 
-                                <Route index element={ <Home
-                                        posts={ searchResults }
-                                        data={ data }
-                                        fetchError={ fetchError }
-                                        isLoading={ isLoading } /> } />
-                                <Route path='post'>
-                                        <Route index element={ <NewPost
-                                                postTitle={ postTitle }
-                                                postBody={ postBody }
-                                                setPostTitle={ setPostTitle }
-                                                setPostBody={ setPostBody }
-                                                handleSubmit={ handleSubmit }
-                                        /> } />
-                                        <Route path=':id' element={ <PostPage posts={ posts }
-                                                handleDelete={ handleDelete } /> } />
-                                        <Route path='edit/:id' element={ <EditPost
-                                                posts={ posts }
-                                                handleEdit={ handleEdit }
-                                                editTitle={ editTitle }
-                                                editBody={ editBody }
-                                                setEditTitle={ setEditTitle }
-                                                setEditBody={ setEditBody }
-                                        /> } />
+                                        <Route index element={ <Home /> } />
+                                        <Route path='post'>
+                                                <Route index element={ <NewPost
+                                                        postTitle={ postTitle }
+                                                        postBody={ postBody }
+                                                        setPostTitle={ setPostTitle }
+                                                        setPostBody={ setPostBody }
+                                                        handleSubmit={ handleSubmit }
+                                                /> } />
+                                                <Route path=':id' element={ <PostPage posts={ posts }
+                                                        handleDelete={ handleDelete } /> } />
+                                                <Route path='edit/:id' element={ <EditPost
+                                                        posts={ posts }
+                                                        handleEdit={ handleEdit }
+                                                        editTitle={ editTitle }
+                                                        editBody={ editBody }
+                                                        setEditTitle={ setEditTitle }
+                                                        setEditBody={ setEditBody }
+                                                /> } />
+                                        </Route>
                                 </Route>
-                        </Route>
-                        <Route path="/about" element={ <About /> } />
-                        <Route path="*" element={ <MissingPost /> } />
-                        {/* <Route path="*" component={ MissingPost } /> */ }
-                </Routes>
+                                <Route path="/about" element={ <About /> } />
+                                <Route path="*" element={ <MissingPost /> } />
+                                {/* <Route path="*" component={ MissingPost } /> */ }
+                        </Routes>
+                </DataProvider>
         );
 }
 

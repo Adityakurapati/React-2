@@ -1,18 +1,16 @@
 import { createContext } from 'react';
 
 // BuiltIn Hooks
-import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom'
 // import { Route, BrowserRouter as Router, Switch, useHistory } from 'react-router-dom'
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import api from './api/posts';
-import EditPost from './components/EditPost';
 
 //Custom Hooks
 import useWindowSize from './hooks/useWindowSize';
 import useAxiosFetch from './hooks/useAxiosFetch';
 
-const { data, fetchError, isLoading }=useAxiosFetch();
+const { data, fetchError, isLoading }=useAxiosFetch( "localhost:3500/posts" );
 
 const lists=[
         {
@@ -135,11 +133,11 @@ export const DataProvider=( { children } ) =>
 {
         // Pass All Values to Provider Instead of Drillling Them Down As Props 
         return <DataContext value={ {
-                search, setSearch, width
-                , searchResults, data, fetchError, isLoading
-                , postTitle, postBody, setPostTitle, setPostBody, handleSubmit
-                , posts, handleDelete
-                , handleEdit, editTitle, editBody, setEditTitle, setEditBody
+                search, setSearch, width,
+                searchResults, data, fetchError, isLoading,
+                postTitle, postBody, setPostTitle, setPostBody, handleSubmit,
+                posts, handleDelete,
+                handleEdit, editTitle, editBody, setEditTitle, setEditBody
         } }>
                 { children }
         </DataContext>
