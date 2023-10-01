@@ -35,10 +35,6 @@ const DataContext=createContext( {} );
 
 export const DataProvider=( { children } ) =>
 {
-
-
-        const { data, fetchError, isLoading }=useAxiosFetch( "localhost:3500/posts" );
-
         // PostPage , Post 
         const [ posts, setPosts ]=useState( lists );
         const [ search, setSearch ]=useState( '' );
@@ -58,11 +54,13 @@ export const DataProvider=( { children } ) =>
 
         // useEffect
         // #1 Runs At load
+        
+        const { data, fetchError, isLoading }=useAxiosFetch( "localhost:3500/posts" );
         useEffect( async () =>
         {
                 // axios = auto into JsonObject + Catch The Error When Its Not In The 200 Http response 🚫 if(!res.ok)
                 setPosts( data );
-        }, [] )
+        }, [data] )
         useEffect( () =>
         {
                 const filteredPosts=posts.filter( post =>

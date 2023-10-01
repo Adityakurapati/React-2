@@ -1,37 +1,37 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { format } from 'date-fns';
-import { useContext } from 'react';
-import DataContext from '../Context/DataContext';
 import { useNavigate } from "react-router-dom";
-import api from '../api/posts';
+
+import { useStoreState, useStoreActions } from 'easy-peasy';
 const EditPost=async () =>
 {
-        const { posts, setPosts }=useContext( DataContext );
+        // const { posts, setPosts }=useContext( DataContext );
         const navigate=useNavigate();
         const { id }=useParams();
-        const post=posts.find( post => ( post.id ).toString()===id );
 
+        //States 
+        const posts=useStoreState( state => state.postTitle );
+        const editTitle=useStoreState( state => state.editTitle );
+        const editBody=useStoreState( state => state.editBody );
+        const getPostById=useStoreState( state => state.getPostById );
 
-        const [ editTitle, setEditTitle ]=useState( '' );
-        const [ editBody, setEditBody ]=useState( '' );
+        //Actions 
+        const setEditTitle=useStoreActions( action => action.setEditTitle );
+        const setEditBody=useStoreActions( action => action.setEditBody );
+        const setPosts=useStoreActions( action => action.setPosts );
+        const editPost=useStoreActions( action => action.editPost );
+
+        // const post=posts.find( post => ( post.id ).toString()===id );
+        const post=getPostById( id )
 
         const handleEdit=async ( id ) =>
         {
                 const date=format( new Date( "MMMM dd, yyyy pp" ) );
                 const updatedPost={ id: id, title: editTitle, date: date, body: editBody };
-                try
-                {
-                        const response=api.put( `/posts/${ id }`, updatedPost );
-                        setPosts( posts.map( post => post.id===id? { ...response.data }:{ ...post } ) );
-                        setEditTitle( '' );
-                        setEditBody( '' );
-                        navigate( '/' );
-                } catch ( err )
-                {
-                        console.log( err.message );
-                }
 
+                editPost( updatedPost );
+                navigate( `/posts/${ id }` );
         }
         useEffect( async () =>
         {
@@ -43,7 +43,7 @@ const EditPost=async () =>
                         { editTitle&&
                                 <>
                                         <center><h2>New Post</h2></center>
-                                        <form onSubmit={ handleEdit } className="newPostForm">
+                                        <form onSubmit={ e => e.preventDefault() } className="newPostForm">
                                                 <input type="text"
                                                         placeholder="Post title"
                                                         value={ editTitle }
@@ -54,7 +54,7 @@ const EditPost=async () =>
                                                         value={ editBody }
                                                         onChange={ ( e ) => setEditBody( e.target.value ) } />
 
-                                                <button type='submit'>Submit</button>
+                                                <button type='button' onClick={handleEdit(post.id)}>Submit</button>
                                         </form>
                                 </>
                         }

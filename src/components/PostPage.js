@@ -1,16 +1,19 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom';
 import { UilEdit, UilTrashAlt } from '@iconscout/react-unicons'
-import { useContext } from 'react';
-import DataContext from '../Context/DataContext';
-
 import { useNavigate } from "react-router-dom";
-import api from '../api/posts';
+
+import { useStoreState, useStoreActions } from 'easy-peasy';
 const PostPage=() =>
 {
         // Extract The Id From The URL Parameters 
-        const { posts, setPosts }=useContext( DataContext );
+        // const { posts, setPosts }=useContext( DataContext );
+        // const posts=useStoreState( state => state.posts );
+        // const setPosts=useStoreActions( action => action.posts );
         const { id }=useParams();
+        const deletePost=useStoreActions( action => action.deletePost );
+        const getPostById=useStoreState( state => state.getPostById );
+        const post=getPostById( id )
 
         const navigate=useNavigate();
 
@@ -18,22 +21,10 @@ const PostPage=() =>
 
         const handleDelete=async ( id ) =>
         {
-                try
-                {
-                        // WE Didn't Get Response 
-                        await api.delete( `/posts/${ id }` );
-                        const listItems=posts.filter( post => post.id!==id );
-                        setPosts( listItems );
-                        // history.push( '/' ); // Just Route Back To The Home Page 
-                        navigate( '/' ); // Just Route Back To The Home Page 
-                } catch ( err )
-                {
-                        alert( "Unable To Delete " )
-                }
+                deletePost( id );
+                navigate( '/' );
         }
 
-        // toString() Because The id in Url Is String And post.id is Numeric
-        const post=posts.find( post => ( post.id ).toString()===id );
         return (
                 <main className="postPage">
                         <article className='post'>

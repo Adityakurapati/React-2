@@ -11,7 +11,9 @@ import EditPost from './components/EditPost';
 //  404 Missing Page 
 import MissingPost from './components/MissingPost';
 import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom'
-
+import { useAxiosFetch } from './hooks/useAxiosFetch';
+import { useEffect } from 'react';
+import { useStoreActions } from 'easy-peasy';
 
 function App ()
 {
@@ -20,25 +22,34 @@ function App ()
 
         {/* RRv6 Is More Smarter It Knows That Which Path Is More Exact
        */}
+
+        const setPosts=useStoreActions( actions => actions.setPosts );
+        const { data, fetchError, isLoading }=useAxiosFetch( "localhost:3500/posts" );
+        useEffect( async () =>
+        {
+                // axios = auto into JsonObject + Catch The Error When Its Not In The 200 Http response 🚫 if(!res.ok)
+                setPosts( data );
+        }, [ data, setPosts ] )
+
+
         return (
-                <DataProvider>
-                        <Routes>
+                <Routes>
+                        <Route path='/' element={
+                                <Layout /> }>
 
-                                <Route path='/' element={
-                                        <Layout /> }>
-
-                                        <Route index element={ <Home /> } />
-                                        <Route path='post'>
-                                                <Route index element={ <NewPost /> } />
-                                                <Route path=':id' element={ <PostPage /> } />
-                                                <Route path='edit/:id' element={ <EditPost /> } />
-                                        </Route>
+                                <Route index element={ <Home fetchError={ fetchError }
+                                        isLoading={ isLoading } /> } />
+                                <Route path='post'>
+                                        <Route index element={ <NewPost /> } />
+                                        <Route path=':id' element={ <PostPage /> } />
+                                        <Route path='edit/:id' element={ <EditPost /> } />
                                 </Route>
-                                <Route path="/about" element={ <About /> } />
-                                <Route path="*" element={ <MissingPost /> } />
-                                {/* <Route path="*" component={ MissingPost } /> */ }
-                        </Routes>
-                </DataProvider>
+                        </Route>
+                        <Route path="/about" element={ <About /> } />
+                        <Route path="*" element={ <MissingPost /> } />
+                        {/* <Route path="*" component={ MissingPost } /> */ }
+                </Routes>
+
         );
 }
 
