@@ -12,8 +12,6 @@ import EditPost from './components/EditPost';
 import MissingPost from './components/MissingPost';
 import { Route, BrowserRouter as Router, Routes, useNavigate } from 'react-router-dom'
 
-// Context
-import { DataProvider } from './Context/DataContext';
 
 function App ()
 {
